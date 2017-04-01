@@ -17,22 +17,22 @@ pipeline:
   clone:
     image: plugins/git
     tags: true
-		# dont clone submodules
-		recursive: false
+    # dont clone submodules
+    recursive: false
 
-	wait-for-build:
-		prevent-concurrent-builds:
-			image: ${TEST_BUILD_IMAGE=gcr.io/eminent-nation-87317/vic-integration-test:1.22}
-			pull: true
-			environment:
-				BIN: bin
-				GOPATH: /go
-				SHELL: /bin/bash
-				TEST_URL_ARRAY:  $TEST_URL_ARRAY
-				DRONE_SERVER:  $DRONE_SERVER
-				DRONE_TOKEN:  $DRONE_TOKEN
-			commands:
-				- tests/wait_until_previous_builds_complete.sh
+  wait-for-build:
+    prevent-concurrent-builds:
+      image: ${TEST_BUILD_IMAGE=gcr.io/eminent-nation-87317/vic-integration-test:1.22}
+      pull: true
+      environment:
+        BIN: bin
+        GOPATH: /go
+        SHELL: /bin/bash
+        TEST_URL_ARRAY:  $TEST_URL_ARRAY
+        DRONE_SERVER:  $DRONE_SERVER
+        DRONE_TOKEN:  $DRONE_TOKEN
+      commands:
+        - tests/wait_until_previous_builds_complete.sh
 
   vic-engine:
     image: ${TEST_BUILD_IMAGE=gcr.io/eminent-nation-87317/vic-integration-test:1.22}
