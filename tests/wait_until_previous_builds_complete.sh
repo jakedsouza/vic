@@ -13,16 +13,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# TODO jaked replace build info part
 unit_test_array=($TEST_URL_ARRAY)
 numServers=${#unit_test_array[@]}
 DRONE_BUILD_NUMBER=${DRONE_BUILD_NUMBER:=0}
-prevBuildStatus=`drone build info vmware/vic $(( $DRONE_BUILD_NUMBER-$numServers ))`
+prevBuildStatus=`drone build info jakedsouza/vic $(( $DRONE_BUILD_NUMBER-$numServers ))`
 outArray=($prevBuildStatus)
 
 while [[ ${outArray[2]} == *"running"* ]]; do
     echo "Waiting 5 minutes for previous build to complete";
     sleep 300;
-    prevBuildStatus=`drone build info vmware/vic $(( $DRONE_BUILD_NUMBER-$numServers ))`
+    prevBuildStatus=`drone build info jakedsouza/vic $(( $DRONE_BUILD_NUMBER-$numServers ))`
     outArray=($prevBuildStatus)
 done
 

@@ -32,7 +32,7 @@ RUN ln -s /usr/bin/docker1.11 /usr/bin/docker
 RUN curl -sSL https://github.com/vmware/govmomi/releases/download/v0.13.0/govc_linux_amd64.gz | gzip -d > /usr/local/bin/govc
 RUN chmod +x /usr/local/bin/govc
 
-RUN curl http://downloads.drone.io/drone-cli/drone_linux_amd64.tar.gz | tar zx
+RUN curl http://downloads.drone.io/release/linux/amd64/drone.tar.gz | tar zx
 RUN install -t /usr/local/bin drone
 
 RUN apt-get install sshpass
