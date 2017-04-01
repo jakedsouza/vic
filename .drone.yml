@@ -126,11 +126,11 @@ pipeline:
       - cp $BIN/vic-ui* $BIN_TEMP_DIR
       - cp $BIN/appliance.iso $BIN_TEMP_DIR
       - cp $BIN/bootstrap.iso $BIN_TEMP_DIR
-      - tar czvf $BIN/vic_$$BUILD_NUMBER.tar.gz -C $BIN vic
-      - shasum -a 256 $BIN/vic_$$BUILD_NUMBER.tar.gz
-      - shasum -a 1 $BIN/vic_$$BUILD_NUMBER.tar.gz
-      - md5sum $BIN/vic_$$BUILD_NUMBER.tar.gz
-      - du -ks $BIN/vic_$$BUILD_NUMBER.tar.gz | awk '{print $1 / 1024}' | { read x; echo $x MB; }
+      - tar czvf $BIN/vic_$DRONE_BUILD_NUMBER.tar.gz -C $BIN vic
+      - shasum -a 256 $BIN/vic_$DRONE_BUILD_NUMBER.tar.gz
+      - shasum -a 1 $BIN/vic_$DRONE_BUILD_NUMBER.tar.gz
+      - md5sum $BIN/vic_$DRONE_BUILD_NUMBER.tar.gz
+      - du -ks $BIN/vic_$DRONE_BUILD_NUMBER.tar.gz | awk '{print $1 / 1024}' | { read x; echo $x MB; }
       - make sincemark
     when:
       repo: jakedsouza/vic
@@ -154,13 +154,13 @@ pipeline:
 #     username: $$BINTRAY_USERNAME
 #     api_key: $$BINTRAY_API_KEY
 #     artifacts:
-#       - file: bin/vic_$$BUILD_NUMBER.tar.gz
+#       - file: bin/vic_$DRONE_BUILD_NUMBER.tar.gz
 #         owner: vmware
 #         type: executable
 #         repository: vic-repo
 #         package: build
-#         version: $$BUILD_NUMBER
-#         target: vic_$$BUILD_NUMBER.tar.gz
+#         version: $DRONE_BUILD_NUMBER
+#         target: vic_$DRONE_BUILD_NUMBER.tar.gz
 #         publish: true
 #     when:
 #       repo: vmware/vic
