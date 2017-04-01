@@ -22,7 +22,7 @@ mount $REPORTING_SERVER_URL:/export/drone-test-results /drone-test-results
 
 testresultsdb="vic-all.db"
 
-if [ $DRONE_BRANCH = "master" ] && [ $DRONE_REPO = "vmware/vic" ]; then
+if [ $DRONE_BRANCH = "master" ] && [ $DRONE_REPO = "jakedsouza/vic" ]; then
 	testresultsdb="vic-master.db"
 fi
 
