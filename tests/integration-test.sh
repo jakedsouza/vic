@@ -20,11 +20,12 @@ set +x
 
 dpkg -l > package.list
 
-buildinfo=$(drone build info vmware/vic $DRONE_BUILD_NUMBER)
+# TODO jaked change to vic
+buildinfo=$(drone build info jakedsouza/vic $DRONE_BUILD_NUMBER)
 
-if [[ $DRONE_BRANCH == "master" || $DRONE_BRANCH == *"refs/tags"* || $DRONE_BRANCH == "release" ]] && [[ $DRONE_REPO == "vmware/vic" ]]; then
+if [[ $DRONE_BRANCH == "master" || $DRONE_BRANCH == *"refs/tags"* || $DRONE_BRANCH == "release" ]] && [[ $DRONE_REPO == "jakedsouza/vic" ]]; then
     pybot --removekeywords TAG:secret --exclude skip tests/test-cases
-elif grep -q "\[full ci\]" <(drone build info vmware/vic $DRONE_BUILD_NUMBER); then
+elif grep -q "\[full ci\]" <(drone build info jakedsouza/vic $DRONE_BUILD_NUMBER); then
     pybot --removekeywords TAG:secret --exclude skip tests/test-cases
 elif (echo $buildinfo | grep -q "\[specific ci="); then
     buildtype=$(echo $buildinfo | grep "\[specific ci=")
@@ -37,7 +38,7 @@ fi
 rc="$?"
 
 timestamp=$(date +%s)
-outfile="integration_logs_"$DRONE_BUILD_NUMBER"_"$DRONE_COMMIT".zip"
+outfile="integration_logs_"$DRONE_BUILD_NUMBER"_"$DRONE_COMMIT_SHA".zip"
 
 zip -9 $outfile output.xml log.html report.html package.list *container-logs.zip *.log
 
@@ -54,19 +55,20 @@ echo "content_language = en" >> $botofile
 echo "default_project_id = $GS_PROJECT_ID" >> $botofile
 
 
-if [ -f "$outfile" ]; then
-  gsutil cp $outfile gs://vic-ci-logs
-  source "$(dirname "${BASH_SOURCE[0]}")/save-test-results.sh"
+# TODO jaked uncomment and test before merge with vmware/vic
+# if [ -f "$outfile" ]; then
+#   gsutil cp $outfile gs://vic-ci-logs
+#   source "$(dirname "${BASH_SOURCE[0]}")/save-test-results.sh"
 
-  echo "----------------------------------------------"
-  echo "View test logs:"
-  echo "https://vic-logs.vcna.io/$DRONE_BUILD_NUMBER/"
-  echo "Download test logs:"
-  echo "https://console.cloud.google.com/m/cloudstorage/b/vic-ci-logs/o/$outfile?authuser=1"
-  echo "----------------------------------------------"
-else
-  echo "No log output file to upload"
-fi
+#   echo "----------------------------------------------"
+#   echo "View test logs:"
+#   echo "https://vic-logs.vcna.io/$DRONE_BUILD_NUMBER/"
+#   echo "Download test logs:"
+#   echo "https://console.cloud.google.com/m/cloudstorage/b/vic-ci-logs/o/$outfile?authuser=1"
+#   echo "----------------------------------------------"
+# else
+#   echo "No log output file to upload"
+# fi
 
 if [ -f "$keyfile" ]; then
   rm -f $keyfile
