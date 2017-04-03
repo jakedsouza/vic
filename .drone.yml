@@ -21,18 +21,18 @@ pipeline:
     recursive: false
 
   wait-for-build:
-    prevent-concurrent-builds:
-      image: gcr.io/eminent-nation-87317/vic-integration-test:1.22
-      pull: true
-      environment:
-        BIN: bin
-        GOPATH: /go
-        SHELL: /bin/bash
-        TEST_URL_ARRAY:  $TEST_URL_ARRAY
-        DRONE_SERVER:  $DRONE_SERVER
-        DRONE_TOKEN:  $DRONE_TOKEN
-      commands:
-        - tests/wait_until_previous_builds_complete.sh
+    image: gcr.io/eminent-nation-87317/vic-integration-test:1.22
+    pull: true
+    environment:
+      BIN: bin
+      GOPATH: /go
+      SHELL: /bin/bash
+      TEST_URL_ARRAY:  ${TEST_URL_ARRAY}
+      DRONE_SERVER:  ${DRONE_SERVER}
+      DRONE_TOKEN:  ${DRONE_TOKEN}
+    commands:
+      - echo ${TEST_URL_ARRAY}
+      - tests/wait_until_previous_builds_complete.sh
 
   vic-engine:
     image: gcr.io/eminent-nation-87317/vic-integration-test:1.22
@@ -41,11 +41,11 @@ pipeline:
       BIN: bin
       GOPATH: /go
       SHELL: /bin/bash
-      TEST_URL_ARRAY:  $TEST_URL_ARRAY
-      TEST_USERNAME:  $TEST_USERNAME
-      TEST_PASSWORD:  $TEST_PASSWORD
-      BUILD_NUMBER: $DRONE_BUILD_NUMBER
-      COMMIT: $DRONE_COMMIT_SHA
+      TEST_URL_ARRAY:  ${TEST_URL_ARRAY}
+      TEST_USERNAME:  ${TEST_USERNAME}
+      TEST_PASSWORD:  ${TEST_PASSWORD}
+      BUILD_NUMBER: ${DRONE_BUILD_NUMBER}
+      COMMIT: ${DRONE_COMMIT_SHA}
     commands:
       - make mark
       - make -j3 all
@@ -67,27 +67,27 @@ pipeline:
       GOPATH: /drone
       SHELL: /bin/bash
       LOG_TEMP_DIR: install-logs
-      GITHUB_AUTOMATION_API_KEY:  $$GITHUB_AUTOMATION_API_KEY
-      DRONE_SERVER:  $DRONE_SERVER
-      DRONE_TOKEN:  $DRONE_TOKEN
-      TEST_URL_ARRAY:  $TEST_URL_ARRAY
-      TEST_USERNAME:  $TEST_USERNAME
-      TEST_PASSWORD:  $TEST_PASSWORD
-      TEST_DATASTORE: $TEST_DATASTORE
-      TEST_TIMEOUT: $TEST_TIMEOUT
-      REPORTING_SERVER_URL: $REPORTING_SERVER_URL
-      WINDOWS_URL:  $WINDOWS_URL
-      WINDOWS_USERNAME:  $WINDOWS_USERNAME
-      WINDOWS_PASSWORD:  $WINDOWS_PASSWORD
+      GITHUB_AUTOMATION_API_KEY: ${GITHUB_AUTOMATION_API_KEY}
+      DRONE_SERVER: ${DRONE_SERVER}
+      DRONE_TOKEN: ${DRONE_TOKEN}
+      TEST_URL_ARRAY: ${TEST_URL_ARRAY}
+      TEST_USERNAME: ${TEST_USERNAME}
+      TEST_PASSWORD: ${TEST_PASSWORD}
+      TEST_DATASTORE: ${TEST_DATASTORE}
+      TEST_TIMEOUT: ${TEST_TIMEOUT}
+      REPORTING_SERVER_URL: ${REPORTING_SERVER_URL}
+      WINDOWS_URL: ${WINDOWS_URL}
+      WINDOWS_USERNAME: ${WINDOWS_USERNAME}
+      WINDOWS_PASSWORD: ${WINDOWS_PASSWORD}
       GOVC_INSECURE: true
-      GOVC_USERNAME:  $TEST_USERNAME
-      GOVC_PASSWORD:  $TEST_PASSWORD
-      GOVC_RESOURCE_POOL:  $TEST_RESOURCE
-      GOVC_DATASTORE: $TEST_DATASTORE
-      GS_PROJECT_ID: $GS_PROJECT_ID
-      GS_CLIENT_EMAIL: $GS_CLIENT_EMAIL
-      GS_PRIVATE_KEY: $GS_PRIVATE_KEY
-      DOMAIN: $CI_DOMAIN
+      GOVC_USERNAME: ${TEST_USERNAME}
+      GOVC_PASSWORD: ${TEST_PASSWORD}
+      GOVC_RESOURCE_POOL: ${TEST_RESOURCE}
+      GOVC_DATASTORE: ${TEST_DATASTORE}
+      GS_PROJECT_ID: ${GS_PROJECT_ID}
+      GS_CLIENT_EMAIL: ${GS_CLIENT_EMAIL}
+      GS_PRIVATE_KEY: ${GS_PRIVATE_KEY}
+      DOMAIN: ${CI_DOMAIN}
     commands:
       - make mark
       - tests/integration-test.sh
@@ -126,11 +126,11 @@ pipeline:
       - cp $BIN/vic-ui* $BIN_TEMP_DIR
       - cp $BIN/appliance.iso $BIN_TEMP_DIR
       - cp $BIN/bootstrap.iso $BIN_TEMP_DIR
-      - tar czvf $BIN/vic_$DRONE_BUILD_NUMBER.tar.gz -C $BIN vic
-      - shasum -a 256 $BIN/vic_$DRONE_BUILD_NUMBER.tar.gz
-      - shasum -a 1 $BIN/vic_$DRONE_BUILD_NUMBER.tar.gz
-      - md5sum $BIN/vic_$DRONE_BUILD_NUMBER.tar.gz
-      - du -ks $BIN/vic_$DRONE_BUILD_NUMBER.tar.gz | awk '{print $1 / 1024}' | { read x; echo $x MB; }
+      - tar czvf $BIN/vic_${DRONE_BUILD_NUMBER}.tar.gz -C $BIN vic
+      - shasum -a 256 $BIN/vic_${DRONE_BUILD_NUMBER}.tar.gz
+      - shasum -a 1 $BIN/vic_${DRONE_BUILD_NUMBER}.tar.gz
+      - md5sum $BIN/vic_${DRONE_BUILD_NUMBER}.tar.gz
+      - du -ks $BIN/vic_${DRONE_BUILD_NUMBER}.tar.gz | awk '{print $1 / 1024}' | { read x; echo $x MB; }
       - make sincemark
     when:
       repo: jakedsouza/vic
