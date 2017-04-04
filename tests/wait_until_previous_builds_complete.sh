@@ -13,8 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -x;
-
 unit_test_array=($TEST_URL_ARRAY)
 numServers=${#unit_test_array[@]}
 DRONE_BUILD_NUMBER=${DRONE_BUILD_NUMBER:=0}
